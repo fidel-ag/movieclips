@@ -1,0 +1,17 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 699475933327.dkr.ecr.us-east-1.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t movieclips .
+      - docker tag movieclips:latest 699475933327.dkr.ecr.us-east-1.amazonaws.com/landing/movieclips:latest
+  post_build:
+    commands:
+      - echo Pushing the Docker image to ECR...
+      - docker push 699475933327.dkr.ecr.us-east-1.amazonaws.com/landing/movieclips:latest
+      - echo Build completed on `date`
