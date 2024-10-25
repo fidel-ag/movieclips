@@ -1,6 +1,7 @@
 FROM nas701/cybersec922-web5 
 RUN apt install libsqlite3-dev
 COPY requirements.txt /tmp/requirements.txt
+RUN pip3.10 install --upgrade pip
 RUN pip3.10 install -r /tmp/requirements.txt
 WORKDIR /app
 COPY . .
