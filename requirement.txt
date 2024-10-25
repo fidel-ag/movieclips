@@ -1,0 +1,9 @@
+asgiref
+Django
+pytz
+sqlparse
+django-crispy-forms
+db-sqlite3 # this for testing
+channels
+elevenlabs
+moviepy

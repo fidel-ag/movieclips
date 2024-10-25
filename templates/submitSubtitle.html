@@ -1,0 +1,196 @@
+{% extends 'accounts/base.html' %} {% block content %} {% load static %}
+<header class="admin-header">
+        <div class="container">
+            <div class="header-two">
+                <div class="vsl-logo text-center">
+                    <a href="/">
+                        <img src="{% static 'images/logo.svg' %}" class="img-fluid" alt="LeadMaker Logo" />
+                    </a>
+                </div>
+                <div class="header-profile">
+                {% if user.stripe_subscription_id != '' %}
+                    <div class="credit-score">
+                        <span>Credits Remaining: </span> <span>{{ user.coins }}</span>
+                    </div>
+                {% else %}
+                <div class="credit-score">
+                        <span>Free Trial</span>
+                    </div>
+                {% endif %}
+                    <div class="dropdown">
+                        <button class="profile-icn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{% static 'images/admin-user-icn.svg' %}" alt="User Profile Icon" />
+                        </button>
+                        <div class="profile-dropdown dropdown-menu dropdown-menu-end">
+                            <div class="profile-head">
+                                <h4>{{user.username}}</h4>
+                                <span class="email">{{ user.email }}</span>
+                            </div>
+                            <div class="profile-body">
+                                <div class="profile-nav-item">
+                                    <a href="/manageSubscription">Manage Subscription</a>
+                                </div>
+                                <div class="profile-nav-item">
+                                    {% if user.stripe_subscription_id != '' %}
+                                    <div class="profile-nav-left">
+                                        <a href="#">Credit Left</a>
+                                    </div>
+                                    <div class="profile-nav-right">
+                                        <span class="count">{{ user.coins }}</span>
+                                    </div>
+                                    {% else %}
+                                      <div class="profile-nav-left">
+                                        <a href="#">Free Trial</a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="profile-nav-item">
+                                    <a href="#">Affiliate</a>
+                                </div>
+                            </div>
+                            <div class="profile-footer">
+                                <a href="/accounts/logout">Log out</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</header>
+
+
+<div class="content contain">
+  <section class="login-sec voice-subtitle">
+    <div class="container">
+      <ul class="status-bar">
+        <li class="active">
+          <a href="#!">Upload & Customise</a>
+        </li>
+        <li>
+          <a href="#!">Lead Creation</a>
+        </li>
+        <li>
+          <a href="#!">Background Music Selection</a>
+        </li>
+        <li>
+          <a href="#!">Download</a>
+        </li>
+      </ul>
+      <div class="lead-container">
+        <h5 class="text-center lead-title"> Create Your Perfect Leads: <br class="d-none d-md-block" /> Upload, Customize, and Download! </h5>
+        <form class="lead-form" action="/upload_files" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label class="label-txt">Tutorial Video:</label>
+            <figure class="video-place"></figure>
+            <div class="browse-field">
+                <label for="videoFile" class="label-txt">Upload Your Video:</label>
+                <div class="custum-browse d-flex align-items-center">
+                    <div class="brws">
+                        <input class="br-input" type="file" name="videoFile" id="videoFile" required />
+                        <a href="#!" class="btn get-start browse-btn">
+                            <img src="{% static '/images/upload-icn.svg' %}" alt="" /> Choose file
+                        </a>
+                    </div>
+                    <p>No file chosen</p>
+                </div>
+            </div>
+            <div class="browse-field">
+                <label for="transcribedFile" class="label-txt">Videos Transcribed File:</label>
+                <div class="custum-browse d-flex align-items-center">
+                    <div class="brws">
+                        <input class="br-input" type="file" name="transcribedFile" id="transcribedFile" required />
+                        <a href="#!" class="btn get-start browse-btn">
+                            <img src="{% static '/images/upload-icn.svg' %}" alt="" /> Choose file
+                        </a>
+                    </div>
+                    <p>No file chosen</p>
+                </div>
+            </div>
+            <div class="browse-field">
+                <label for="apiKey" class="label-txt">ElevenLabs API Key:</label>
+                <input type="text" name="apiKey" placeholder="ElevenLabs API Key" class="form-control" id="apiKey" required />
+            </div>
+            <div class="browse-field">
+                <label for="voiceID" class="label-txt">Voice ID:</label>
+                <input type="text" name="voiceID" placeholder="Voice ID" class="form-control" id="voiceID" required />
+            </div>
+            <div class="sub-design">
+                <h5 class="lead-title">Subtitle Design</h5>
+                <div class="browse-field">
+                    <label for="fontFile" class="label-txt">Upload Font File:</label>
+                    <div class="custum-browse d-flex align-items-center">
+                        <div class="brws">
+                            <input class="br-input" type="file" name="fontFile" id="fontFile" required />
+                            <a href="#!" class="btn get-start browse-btn">
+                                <img src="{% static '/images/upload-icn.svg' %}" alt="" /> Choose file
+                            </a>
+                        </div>
+                        <p>No file chosen</p>
+                    </div>
+                </div>
+                <div class="browse-field">
+                <div class="fontSize-Container">
+                  <label for="fontSize" class="label-txt">Font Size: </label>
+                  <div class="slider-value" min id="valueLabel">12</div>
+                  <input type="text" id="fontSize" name="fontSize" value="12" hidden>
+                   <!-- Hidden input -->
+                   </div>
+                  <div class="slider-container">
+                    <div class="slider-track">
+                      <div class="slider-filled" id="slider-filled"></div>
+                    </div>
+                    <div class="slider-thumb" id="sliderThumb"></div>
+                  </div>
+                </div>
+                <div class="browse-field">
+                    <label for="formFileLg" class="label-txt">Font Color:</label>
+                    <div class="custum-browse clr-fld-wrp d-flex align-items-center">
+                        <div class="color-fld" id="text-picker">
+                            <input type="color" name="textColor" id="text-color" value="#ffffff" />
+                        </div>
+                        <p id="text-code">#ffffff</p>
+                    </div>
+                </div>
+                <div class="browse-field">
+                    <label for="bgColor" class="label-txt">Subtitles Background Color:</label>
+                    <div class="custum-browse clr-fld-wrp d-flex align-items-center">
+                        <div class="color-fld clr-black" id="bg-picker">
+                            <input type="color" name="bgColor" id="bg-color" value="#000000" />
+                        </div>
+                        <p id="bg-code">#000000</p>
+                    </div>
+                </div>
+                <h5 class="lead-title">Preview</h5>
+                <div class="design-preview">
+                    <h3 class="preview-title"> Your Selected Video Scene Will Go Here </h3>
+                    <div class="prev-subtitle" id="text-area">
+                        <h5 id="text-area-font"> This Is How Your Original Subtitle Text Will Be Displayed </h5>
+                    </div>
+                </div>
+                <button type="submit" class="btn proceed-btn">Proceed To Lead Creation
+                    <img class="btn-arrow" src="{% static '/images/btn-arrow.svg' %}" alt="arrow" />
+                </button>
+                <div class="loading-wrapper" id="loadingWrapper" style="display: none;">
+                    <div class="loading-content">
+                        <p class="dots">Loading</p>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+      </div>
+    </div>
+  </section>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p>© 2024 LeadMaker.io</p>
+  </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+<script src="{% static '/js/voiceSubtitle.js' %}"></script> 
+
+
+{% endblock content %}
