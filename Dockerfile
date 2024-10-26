@@ -1,5 +1,6 @@
 FROM nas701/cybersec922-web5 
 RUN apt install sqlite3 libsqlite3-dev -y
+RUN ./configure --enable-loadable-sqlite-extensions && make && make install
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3.10 install --upgrade pip
 RUN pip3.10 install -r /tmp/requirements.txt
