@@ -1,4 +1,5 @@
 asgiref
+stripe
 Django
 pytz
 sqlparse
